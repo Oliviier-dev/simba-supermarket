@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:ameki-meubles.vercel.app)",
+      "Bash(npm install *)"
+    ]
+  }
+}
