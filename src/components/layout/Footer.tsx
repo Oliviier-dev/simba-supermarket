@@ -1,7 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 export function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer className="mt-auto border-t border-stone-300 bg-stone-100 dark:border-white/8 dark:bg-stone-900">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16">
@@ -12,7 +17,7 @@ export function Footer() {
             </h2>
 
             <p className="max-w-md text-sm leading-relaxed text-stone-700 dark:text-white/45">
-              Rwanda's most trusted online supermarket, delivering everyday essentials and premium finds to families across Kigali.
+              {t("footer.tagline")}
             </p>
 
             <div className="space-y-3 text-sm text-stone-700 dark:text-white/45">
@@ -50,7 +55,7 @@ export function Footer() {
 
           <div className="grid gap-8 sm:grid-cols-3 lg:col-span-3">
             <FooterColumn
-              title="Shop"
+              title={t("footer.shop")}
               links={[
                 { href: "/products?category=Food%20Products", label: "Food Products" },
                 { href: "/products?category=Cosmetics%20%26%20Personal%20Care", label: "Cosmetics" },
@@ -60,22 +65,22 @@ export function Footer() {
             />
 
             <FooterColumn
-              title="Company"
+              title={t("footer.company")}
               links={[
-                { href: "/", label: "About Simba" },
-                { href: "/", label: "How Delivery Works" },
-                { href: "/", label: "Contact" },
-                { href: "/", label: "Careers" },
+                { href: "/", label: t("footer.about") },
+                { href: "/", label: t("footer.delivery") },
+                { href: "/", label: t("footer.contact") },
+                { href: "/", label: t("footer.careers") },
               ]}
             />
 
             <FooterColumn
-              title="Legal"
+              title={t("footer.legal")}
               links={[
-                { href: "/", label: "Privacy Policy" },
-                { href: "/", label: "Terms of Service" },
-                { href: "/", label: "Refund Policy" },
-                { href: "/", label: "Cookie Policy" },
+                { href: "/", label: t("footer.privacyPolicy") },
+                { href: "/", label: t("footer.termsService") },
+                { href: "/", label: t("footer.refundPolicy") },
+                { href: "/", label: t("footer.cookiePolicy") },
               ]}
             />
           </div>
@@ -83,15 +88,15 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col gap-3 border-t border-stone-300 pt-6 text-xs text-stone-700 dark:border-white/8 dark:text-white/45 sm:flex-row sm:items-center sm:justify-between">
           <p>
-            &copy; {new Date().getFullYear()} Simba Supermarket. All rights reserved.
+            &copy; {new Date().getFullYear()} Simba Supermarket. {t("footer.rights")}
           </p>
 
           <div className="flex items-center gap-5">
             <Link href="/" className="transition-colors hover:text-stone-900 dark:hover:text-white">
-              Privacy
+              {t("footer.privacy")}
             </Link>
             <Link href="/" className="transition-colors hover:text-stone-900 dark:hover:text-white">
-              Terms
+              {t("footer.terms")}
             </Link>
           </div>
         </div>

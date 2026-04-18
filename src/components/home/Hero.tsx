@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { HERO_IMAGE } from "@/lib/products";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 export function Hero() {
+  const { t } = useLanguage();
+
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden">
       <Image
@@ -19,17 +24,17 @@ export function Hero() {
         <div className="max-w-3xl">
           <div className="mb-7 flex items-center gap-3 text-orange">
             <span className="h-px w-8 bg-orange/60" />
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em]">Rwanda's Finest Online Market</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em]">{t("hero.eyebrow")}</p>
           </div>
 
           <h1 className="font-serif text-[clamp(2.25rem,6.4vw,5.9rem)] font-light leading-[0.95] tracking-tight text-white">
-            Shop essentials,
+            {t("hero.titleLine1")}
             <br />
-            <em className="font-semibold not-italic text-orange">fast delivery.</em>
+            <em className="font-semibold not-italic text-orange">{t("hero.titleLine2")}</em>
           </h1>
 
           <p className="mt-6 max-w-xl text-base leading-relaxed text-stone-200 sm:text-lg">
-            From fresh pantry staples to household must-haves, Simba brings 552+ trusted products to your doorstep with a premium digital shopping experience.
+            {t("hero.desc")}
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-3">
@@ -37,22 +42,22 @@ export function Hero() {
               href="/products"
               className="inline-flex h-12 items-center rounded-full bg-orange px-7 text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:bg-orange-hover"
             >
-              Shop Products
+              {t("hero.ctaPrimary")}
             </Link>
 
             <Link
               href="/products?category=Food%20Products"
               className="inline-flex h-12 items-center rounded-full border border-white/25 bg-white/5 px-7 text-xs font-semibold uppercase tracking-[0.2em] text-white backdrop-blur-sm transition-colors hover:bg-white/10"
             >
-              Explore Food
+              {t("hero.ctaSecondary")}
             </Link>
           </div>
 
           <div className="mt-11 grid max-w-2xl grid-cols-1 gap-4 border-l-2 border-orange/60 pl-5 text-stone-100 sm:grid-cols-3 sm:gap-6">
             {[
-              { value: "552+", label: "Products" },
-              { value: "9", label: "Categories" },
-              { value: "Same-day", label: "Delivery" },
+              { value: "552+", label: t("hero.statProducts") },
+              { value: "9", label: t("hero.statCategories") },
+              { value: t("hero.statDelivery"), label: t("cart.delivery") },
             ].map((item) => (
               <div key={item.label}>
                 <p className="font-serif text-xl font-semibold leading-none">{item.value}</p>

@@ -7,16 +7,21 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Moon, Sun, ShoppingCart, Menu, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useCartStore } from "@/store/cart";
+import { LANG_LABELS, type AppLanguage } from "@/lib/i18n";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 const NAV_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/products", label: "Shop" },
-  { href: "/checkout", label: "Checkout" },
-];
+  { href: "/", key: "nav.home" },
+  { href: "/products", key: "nav.shop" },
+  { href: "/checkout", key: "nav.checkout" },
+] as const;
+
+const LANGS: AppLanguage[] = ["en", "fr", "kin"];
 
 export function Nav() {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
+  const { t, language, setLanguage } = useLanguage();
   const openCart = useCartStore((s) => s.openCart);
   const cartCount = useCartStore((s) => s.items.reduce((sum, i) => sum + i.quantity, 0));
 
@@ -93,7 +98,7 @@ export function Nav() {
                         : ""
                     }
                   >
-                    {link.label}
+                    {t(link.key)}
                   </span>
                 </Link>
               );
@@ -101,11 +106,27 @@ export function Nav() {
           </nav>
 
           <div className="ml-auto hidden items-center gap-2 md:flex">
+            <div className="flex items-center gap-1 rounded-full border border-[var(--border)] bg-[var(--surface)] p-1">
+              {LANGS.map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => setLanguage(lang)}
+                  className={`h-8 rounded-full px-2 text-[10px] font-semibold uppercase tracking-[0.14em] transition-colors ${
+                    language === lang
+                      ? "bg-orange text-white"
+                      : "text-[var(--muted)] hover:text-[var(--fg)]"
+                  }`}
+                >
+                  {LANG_LABELS[lang]}
+                </button>
+              ))}
+            </div>
+
             <Link
               href="/products"
               className="inline-flex h-11 items-center rounded-full bg-orange px-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:bg-orange-hover"
             >
-              Shop Now
+              {t("nav.shopNow")}
             </Link>
 
             {mounted && (
@@ -196,7 +217,7 @@ export function Nav() {
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
               <div className="mb-10 flex items-center justify-between">
-                <p className="font-serif text-sm uppercase tracking-[0.2em] text-[var(--muted)]">Navigation</p>
+                <p className="font-serif text-sm uppercase tracking-[0.2em] text-[var(--muted)]">{t("nav.navigation")}</p>
                 <button
                   onClick={() => setMobileOpen(false)}
                   className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border)] text-[var(--muted)]"
@@ -223,26 +244,42 @@ export function Nav() {
                           : "border-[var(--border)] text-[var(--fg)] hover:border-orange/30"
                       }`}
                     >
-                      {link.label}
+                      {t(link.key)}
                     </Link>
                   </motion.div>
                 ))}
               </div>
 
               <div className="mt-auto space-y-3">
+                <div className="flex items-center gap-1 rounded-full border border-[var(--border)] bg-[var(--surface)] p-1">
+                  {LANGS.map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => setLanguage(lang)}
+                      className={`h-9 flex-1 rounded-full text-[10px] font-semibold uppercase tracking-[0.14em] transition-colors ${
+                        language === lang
+                          ? "bg-orange text-white"
+                          : "text-[var(--muted)] hover:text-[var(--fg)]"
+                      }`}
+                    >
+                      {LANG_LABELS[lang]}
+                    </button>
+                  ))}
+                </div>
+
                 <button
                   onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                   className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-[var(--border)] text-sm font-medium text-[var(--fg)]"
                 >
                   {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                  Toggle Theme
+                  {t("nav.toggleTheme")}
                 </button>
 
                 <Link
                   href="/products"
                   className="flex h-12 items-center justify-center rounded-full bg-orange text-sm font-semibold uppercase tracking-[0.2em] text-white"
                 >
-                  Shop Now
+                  {t("nav.shopNow")}
                 </Link>
               </div>
             </motion.aside>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { CartDrawer } from "@/components/cart/CartDrawer";
@@ -29,10 +30,12 @@ export default function RootLayout({
     >
       <body className="min-h-screen flex flex-col">
         <ThemeProvider>
-          <Nav />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <CartDrawer />
+          <LanguageProvider>
+            <Nav />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <CartDrawer />
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>
