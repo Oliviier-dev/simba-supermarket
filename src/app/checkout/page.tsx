@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCartStore } from "@/store/cart";
 import { formatPrice, CATEGORY_IMAGES } from "@/lib/products";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 const DELIVERY_FEE = 1000;
 
@@ -31,12 +32,10 @@ interface FormErrors {
   district?: string;
 }
 
-const STEPS = ["Cart Review", "Delivery Info", "Payment"];
-
-function StepIndicator({ current }: { current: number }) {
+function StepIndicator({ current, labels }: { current: number; labels: string[] }) {
   return (
     <div className="flex items-center justify-center gap-0 mb-10">
-      {STEPS.map((label, i) => (
+      {labels.map((label, i) => (
         <div key={i} className="flex items-center">
           <div className="flex flex-col items-center gap-1.5">
             <div
@@ -60,7 +59,7 @@ function StepIndicator({ current }: { current: number }) {
               {label}
             </span>
           </div>
-          {i < STEPS.length - 1 && (
+          {i < labels.length - 1 && (
             <div className={`w-16 sm:w-24 h-px mx-2 mb-5 transition-colors ${i < current ? "bg-orange" : "bg-[var(--border)]"}`} />
           )}
         </div>
@@ -70,6 +69,7 @@ function StepIndicator({ current }: { current: number }) {
 }
 
 export default function CheckoutPage() {
+  const { t } = useLanguage();
   const router = useRouter();
   const { items, updateQuantity, removeItem, totalPrice } = useCartStore();
   const [step, setStep] = useState(0);
@@ -84,15 +84,16 @@ export default function CheckoutPage() {
 
   const subtotal = totalPrice();
   const total = subtotal + DELIVERY_FEE;
+  const stepLabels = [t("checkout.step.cart"), t("checkout.step.delivery"), t("checkout.step.payment")];
 
   const validateDelivery = (): boolean => {
     const e: FormErrors = {};
-    if (!delivery.fullName.trim()) e.fullName = "Full name is required";
-    if (!delivery.phone.trim()) e.phone = "Phone number is required";
+    if (!delivery.fullName.trim()) e.fullName = t("checkout.error.fullNameRequired");
+    if (!delivery.phone.trim()) e.phone = t("checkout.error.phoneRequired");
     else if (!/^\d{10}$/.test(delivery.phone.replace(/\D/g, "")))
-      e.phone = "Phone number must be exactly 10 digits";
-    if (!delivery.address.trim()) e.address = "Delivery address is required";
-    if (!delivery.district) e.district = "Please select a district";
+      e.phone = t("checkout.error.phoneDigits");
+    if (!delivery.address.trim()) e.address = t("checkout.error.addressRequired");
+    if (!delivery.district) e.district = t("checkout.error.districtRequired");
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -111,13 +112,13 @@ export default function CheckoutPage() {
     return (
       <div className="min-h-screen bg-[var(--bg)] flex flex-col items-center justify-center gap-6 px-4">
         <div className="text-6xl">🛒</div>
-        <h1 className="font-serif text-3xl font-bold text-[var(--fg)]">Your cart is empty</h1>
-        <p className="text-[var(--muted)] text-center">Add some products before checking out.</p>
+        <h1 className="font-serif text-3xl font-bold text-[var(--fg)]">{t("cart.emptyTitle")}</h1>
+        <p className="text-[var(--muted)] text-center">{t("checkout.emptyDesc")}</p>
         <Link
           href="/products"
           className="bg-orange text-white px-6 h-12 rounded-xl font-semibold flex items-center hover:bg-orange-hover transition-colors"
         >
-          Browse Products
+          {t("cart.browse")}
         </Link>
       </div>
     );
@@ -128,12 +129,12 @@ export default function CheckoutPage() {
       <div className="max-w-3xl mx-auto">
         <div className="mb-8">
           <Link href="/products" className="text-sm text-[var(--muted)] hover:text-orange transition-colors">
-            ← Continue shopping
+            ← {t("checkout.continueShopping")}
           </Link>
-          <h1 className="font-serif text-3xl font-bold text-[var(--fg)] mt-2">Checkout</h1>
+          <h1 className="font-serif text-3xl font-bold text-[var(--fg)] mt-2">{t("checkout.title")}</h1>
         </div>
 
-        <StepIndicator current={step} />
+        <StepIndicator current={step} labels={stepLabels} />
 
         {/* Step 0: Cart Review */}
         {step === 0 && (
@@ -141,7 +142,7 @@ export default function CheckoutPage() {
             <div className="bg-[var(--surface)] rounded-3xl border border-[var(--border)] overflow-hidden">
               <div className="px-6 py-4 border-b border-[var(--border)]">
                 <h2 className="font-semibold text-[var(--fg)]">
-                  Your items ({items.reduce((s, i) => s + i.quantity, 0)})
+                  {t("checkout.yourItems")} ({items.reduce((s, i) => s + i.quantity, 0)})
                 </h2>
               </div>
 
@@ -185,7 +186,7 @@ export default function CheckoutPage() {
                       <button
                         onClick={() => removeItem(item.id)}
                         className="w-8 h-8 flex items-center justify-center text-[var(--muted)] hover:text-red-500 transition-colors"
-                        aria-label="Remove item"
+                        aria-label={t("cart.remove")}
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -203,18 +204,18 @@ export default function CheckoutPage() {
 
             {/* Order summary */}
             <div className="bg-[var(--surface)] rounded-3xl border border-[var(--border)] p-6 space-y-3">
-              <h2 className="font-semibold text-[var(--fg)] mb-4">Order Summary</h2>
+              <h2 className="font-semibold text-[var(--fg)] mb-4">{t("checkout.orderSummary")}</h2>
               <div className="flex justify-between text-sm">
-                <span className="text-[var(--muted)]">Subtotal</span>
+                <span className="text-[var(--muted)]">{t("cart.subtotal")}</span>
                 <span className="font-medium text-[var(--fg)]">{formatPrice(subtotal)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-[var(--muted)]">Delivery fee</span>
+                <span className="text-[var(--muted)]">{t("checkout.deliveryFee")}</span>
                 <span className="font-medium text-[var(--fg)]">{formatPrice(DELIVERY_FEE)}</span>
               </div>
               <div className="h-px bg-[var(--border)]" />
               <div className="flex justify-between">
-                <span className="font-bold text-[var(--fg)]">Total</span>
+                <span className="font-bold text-[var(--fg)]">{t("checkout.total")}</span>
                 <span className="font-bold text-xl text-orange">{formatPrice(total)}</span>
               </div>
             </div>
@@ -223,7 +224,7 @@ export default function CheckoutPage() {
               onClick={() => setStep(1)}
               className="w-full h-12 bg-orange text-white rounded-xl font-semibold hover:bg-orange-hover active:scale-[0.99] transition-all"
             >
-              Continue to Delivery
+              {t("checkout.continueDelivery")}
             </button>
           </div>
         )}
@@ -232,12 +233,12 @@ export default function CheckoutPage() {
         {step === 1 && (
           <div className="space-y-6">
             <div className="bg-[var(--surface)] rounded-3xl border border-[var(--border)] p-6 space-y-5">
-              <h2 className="font-semibold text-[var(--fg)]">Delivery Details</h2>
+              <h2 className="font-semibold text-[var(--fg)]">{t("checkout.deliveryDetails")}</h2>
 
               {/* Full Name */}
               <div>
                 <label className="block text-sm font-medium text-[var(--fg)] mb-1.5">
-                  Full Name
+                  {t("checkout.fullName")}
                 </label>
                 <input
                   type="text"
@@ -246,7 +247,7 @@ export default function CheckoutPage() {
                     setDelivery((d) => ({ ...d, fullName: e.target.value }));
                     if (errors.fullName) setErrors((e) => ({ ...e, fullName: undefined }));
                   }}
-                  placeholder="e.g. Marie Uwimana"
+                  placeholder={t("checkout.fullNamePlaceholder")}
                   className={`w-full h-11 px-4 rounded-xl border bg-[var(--bg)] text-[var(--fg)] text-sm placeholder:text-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-orange/40 transition-all ${
                     errors.fullName ? "border-red-500" : "border-[var(--border)]"
                   }`}
@@ -257,7 +258,7 @@ export default function CheckoutPage() {
               {/* Phone */}
               <div>
                 <label className="block text-sm font-medium text-[var(--fg)] mb-1.5">
-                  Phone Number
+                  {t("checkout.phone")}
                 </label>
                 <input
                   type="tel"
@@ -266,7 +267,7 @@ export default function CheckoutPage() {
                     setDelivery((d) => ({ ...d, phone: e.target.value }));
                     if (errors.phone) setErrors((e) => ({ ...e, phone: undefined }));
                   }}
-                  placeholder="e.g. 0791787414"
+                  placeholder={t("checkout.phonePlaceholder")}
                   className={`w-full h-11 px-4 rounded-xl border bg-[var(--bg)] text-[var(--fg)] text-sm placeholder:text-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-orange/40 transition-all ${
                     errors.phone ? "border-red-500" : "border-[var(--border)]"
                   }`}
@@ -277,7 +278,7 @@ export default function CheckoutPage() {
               {/* District */}
               <div>
                 <label className="block text-sm font-medium text-[var(--fg)] mb-1.5">
-                  District
+                  {t("checkout.district")}
                 </label>
                 <select
                   value={delivery.district}
@@ -289,7 +290,7 @@ export default function CheckoutPage() {
                     errors.district ? "border-red-500" : "border-[var(--border)]"
                   }`}
                 >
-                  <option value="">Select district</option>
+                  <option value="">{t("checkout.selectDistrict")}</option>
                   {RWANDA_DISTRICTS.map((d) => (
                     <option key={d} value={d}>{d}</option>
                   ))}
@@ -300,7 +301,7 @@ export default function CheckoutPage() {
               {/* Address */}
               <div>
                 <label className="block text-sm font-medium text-[var(--fg)] mb-1.5">
-                  Delivery Address
+                  {t("checkout.address")}
                 </label>
                 <textarea
                   value={delivery.address}
@@ -308,7 +309,7 @@ export default function CheckoutPage() {
                     setDelivery((d) => ({ ...d, address: e.target.value }));
                     if (errors.address) setErrors((e) => ({ ...e, address: undefined }));
                   }}
-                  placeholder="Street name, house number, nearby landmark..."
+                  placeholder={t("checkout.addressPlaceholder")}
                   rows={3}
                   className={`w-full px-4 py-3 rounded-xl border bg-[var(--bg)] text-[var(--fg)] text-sm placeholder:text-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-orange/40 transition-all resize-none ${
                     errors.address ? "border-red-500" : "border-[var(--border)]"
@@ -323,13 +324,13 @@ export default function CheckoutPage() {
                 onClick={() => setStep(0)}
                 className="flex-1 h-12 border border-[var(--border)] text-[var(--fg)] rounded-xl font-semibold hover:border-orange hover:text-orange transition-colors"
               >
-                Back
+                {t("checkout.back")}
               </button>
               <button
                 onClick={() => { if (validateDelivery()) setStep(2); }}
                 className="flex-1 h-12 bg-orange text-white rounded-xl font-semibold hover:bg-orange-hover active:scale-[0.99] transition-all"
               >
-                Continue to Payment
+                {t("checkout.continuePayment")}
               </button>
             </div>
           </div>
@@ -339,7 +340,7 @@ export default function CheckoutPage() {
         {step === 2 && (
           <div className="space-y-6">
             <div className="bg-[var(--surface)] rounded-3xl border border-[var(--border)] p-6 space-y-4">
-              <h2 className="font-semibold text-[var(--fg)]">Choose Payment Method</h2>
+              <h2 className="font-semibold text-[var(--fg)]">{t("checkout.choosePayment")}</h2>
 
               {/* MoMo option */}
               <button
@@ -354,8 +355,8 @@ export default function CheckoutPage() {
                   <span className="text-lg font-black text-yellow-900">M</span>
                 </div>
                 <div className="text-left flex-1">
-                  <p className="font-semibold text-[var(--fg)]">MTN Mobile Money</p>
-                  <p className="text-xs text-[var(--muted)] mt-0.5">Pay securely with your MoMo wallet</p>
+                  <p className="font-semibold text-[var(--fg)]">{t("checkout.momo")}</p>
+                  <p className="text-xs text-[var(--muted)] mt-0.5">{t("checkout.momoDesc")}</p>
                 </div>
                 <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                   paymentMethod === "momo" ? "border-orange" : "border-[var(--border)]"
@@ -379,8 +380,8 @@ export default function CheckoutPage() {
                   </svg>
                 </div>
                 <div className="text-left flex-1">
-                  <p className="font-semibold text-[var(--fg)]">Cash on Delivery</p>
-                  <p className="text-xs text-[var(--muted)] mt-0.5">Pay when your order arrives</p>
+                  <p className="font-semibold text-[var(--fg)]">{t("checkout.cod")}</p>
+                  <p className="text-xs text-[var(--muted)] mt-0.5">{t("checkout.codDesc")}</p>
                 </div>
                 <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                   paymentMethod === "cod" ? "border-orange" : "border-[var(--border)]"
@@ -392,18 +393,18 @@ export default function CheckoutPage() {
 
             {/* Order recap */}
             <div className="bg-[var(--surface)] rounded-3xl border border-[var(--border)] p-6 space-y-3">
-              <h2 className="font-semibold text-[var(--fg)] mb-3">Order Recap</h2>
+              <h2 className="font-semibold text-[var(--fg)] mb-3">{t("checkout.orderRecap")}</h2>
               <div className="flex justify-between text-sm">
-                <span className="text-[var(--muted)]">Items ({items.reduce((s, i) => s + i.quantity, 0)})</span>
+                <span className="text-[var(--muted)]">{t("checkout.items")} ({items.reduce((s, i) => s + i.quantity, 0)})</span>
                 <span className="font-medium text-[var(--fg)]">{formatPrice(subtotal)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-[var(--muted)]">Delivery to {delivery.district}</span>
+                <span className="text-[var(--muted)]">{t("checkout.deliveryTo")} {delivery.district}</span>
                 <span className="font-medium text-[var(--fg)]">{formatPrice(DELIVERY_FEE)}</span>
               </div>
               <div className="h-px bg-[var(--border)]" />
               <div className="flex justify-between">
-                <span className="font-bold text-[var(--fg)]">Total</span>
+                <span className="font-bold text-[var(--fg)]">{t("checkout.total")}</span>
                 <span className="font-bold text-xl text-orange">{formatPrice(total)}</span>
               </div>
             </div>
@@ -413,13 +414,13 @@ export default function CheckoutPage() {
                 onClick={() => setStep(1)}
                 className="flex-1 h-12 border border-[var(--border)] text-[var(--fg)] rounded-xl font-semibold hover:border-orange hover:text-orange transition-colors"
               >
-                Back
+                {t("checkout.back")}
               </button>
               <button
                 onClick={handlePlaceOrder}
                 className="flex-1 h-12 bg-orange text-white rounded-xl font-semibold hover:bg-orange-hover active:scale-[0.99] transition-all"
               >
-                Place Order →
+                {t("checkout.placeOrder")} →
               </button>
             </div>
           </div>

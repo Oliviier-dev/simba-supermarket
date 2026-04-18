@@ -6,11 +6,13 @@ import { getAllProducts } from "@/lib/products";
 import { ProductCard } from "@/components/products/ProductCard";
 import { CategoryFilter } from "@/components/products/CategoryFilter";
 import { SortControls, type SortOption } from "@/components/products/SortControls";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import type { Product } from "@/types";
 
 const PAGE_SIZE = 20;
 
 export default function ProductsClient() {
+  const { t } = useLanguage();
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") ?? "";
   const initialCategory = searchParams.get("category") ?? "";
@@ -69,15 +71,15 @@ export default function ProductsClient() {
           <div className="flex items-center gap-2 mb-2">
             <span className="w-5 h-px bg-orange" />
             <span className="text-orange text-xs font-semibold tracking-widest uppercase">
-              Our Products
+              {t("products.eyebrow")}
             </span>
           </div>
           <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[var(--fg)]">
-            {category || "All Products"}
+            {category || t("products.allProducts")}
           </h1>
           {query && (
             <p className="text-[var(--muted)] text-sm mt-1">
-              Results for &ldquo;<span className="text-[var(--fg)] font-medium">{query}</span>&rdquo;
+              {t("products.resultsFor")} &ldquo;<span className="text-[var(--fg)] font-medium">{query}</span>&rdquo;
             </p>
           )}
         </div>
@@ -98,7 +100,7 @@ export default function ProductsClient() {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search within products..."
+              placeholder={t("products.searchPlaceholder")}
               className="w-full h-10 pl-10 pr-4 text-sm bg-[var(--surface)] border border-[var(--border)] rounded-xl outline-none focus:border-orange focus:ring-2 focus:ring-orange/20 text-[var(--fg)] placeholder:text-[var(--muted)] transition-all"
             />
             {query && (
@@ -134,14 +136,14 @@ export default function ProductsClient() {
               </svg>
             </div>
             <div>
-              <p className="text-[var(--fg)] font-semibold">No products found</p>
-              <p className="text-[var(--muted)] text-sm mt-1">Try a different search term or category</p>
+              <p className="text-[var(--fg)] font-semibold">{t("products.noResultsTitle")}</p>
+              <p className="text-[var(--muted)] text-sm mt-1">{t("products.noResultsDesc")}</p>
             </div>
             <button
               onClick={() => { setQuery(""); setCategory(""); }}
               className="mt-2 px-5 py-2 bg-orange text-white text-sm font-medium rounded-xl hover:bg-orange-hover transition-colors"
             >
-              Clear filters
+              {t("products.clearFilters")}
             </button>
           </div>
         ) : (
@@ -154,9 +156,9 @@ export default function ProductsClient() {
 
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
               <p className="text-xs text-[var(--muted)] sm:text-sm">
-                Showing <span className="font-semibold text-[var(--fg)]">{startIndex + 1}</span>
-                {" "}to <span className="font-semibold text-[var(--fg)]">{endIndex}</span>
-                {" "}of <span className="font-semibold text-[var(--fg)]">{filtered.length}</span>
+                {t("products.showing")} <span className="font-semibold text-[var(--fg)]">{startIndex + 1}</span>
+                {" "}{t("products.to")} <span className="font-semibold text-[var(--fg)]">{endIndex}</span>
+                {" "}{t("products.of")} <span className="font-semibold text-[var(--fg)]">{filtered.length}</span>
               </p>
 
               {totalPages > 1 && (
@@ -166,7 +168,7 @@ export default function ProductsClient() {
                     disabled={currentPage === 1}
                     className="h-9 rounded-lg border border-[var(--border)] px-3 text-xs font-medium text-[var(--fg)] transition-colors hover:border-orange hover:text-orange disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    Prev
+                    {t("products.prev")}
                   </button>
 
                   {pageNumbers[0] > 1 && (
@@ -212,7 +214,7 @@ export default function ProductsClient() {
                     disabled={currentPage === totalPages}
                     className="h-9 rounded-lg border border-[var(--border)] px-3 text-xs font-medium text-[var(--fg)] transition-colors hover:border-orange hover:text-orange disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    Next
+                    {t("products.next")}
                   </button>
                 </div>
               )}

@@ -3,25 +3,26 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 const REVIEWS = [
   {
-    name: "Jeannette U.",
-    location: "Kacyiru, Kigali",
+    nameKey: "home.testimonials.r1Name",
+    locationKey: "home.testimonials.r1Location",
     rating: 5,
-    text: "Simba made my weekly grocery routine effortless. The app is clean, delivery is timely, and I can trust what arrives every time.",
+    textKey: "home.testimonials.r1Text",
   },
   {
-    name: "Patrick N.",
-    location: "Kimironko, Kigali",
+    nameKey: "home.testimonials.r2Name",
+    locationKey: "home.testimonials.r2Location",
     rating: 5,
-    text: "The category browsing is exactly what I needed. I quickly find what matters, pay by mobile money, and get same-day drops for urgent items.",
+    textKey: "home.testimonials.r2Text",
   },
   {
-    name: "Ariane M.",
-    location: "Remera, Kigali",
+    nameKey: "home.testimonials.r3Name",
+    locationKey: "home.testimonials.r3Location",
     rating: 5,
-    text: "This feels premium without being complicated. The product details are clear, and the checkout is smooth even on a small phone.",
+    textKey: "home.testimonials.r3Text",
   },
 ];
 
@@ -45,6 +46,7 @@ function Stars({ count }: { count: number }) {
 }
 
 export function ReviewsSection() {
+  const { t } = useLanguage();
   const [[index, direction], setActive] = useState<[number, number]>([0, 0]);
 
   useEffect(() => {
@@ -75,25 +77,25 @@ export function ReviewsSection() {
           <div>
             <div className="mb-3 flex items-center gap-2.5 text-orange">
               <span className="h-px w-8 bg-orange/60" />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.22em]">Testimonials</span>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.22em]">{t("home.testimonials.eyebrow")}</span>
             </div>
 
             <h2 className="font-serif text-[clamp(1.8rem,4.3vw,3.2rem)] font-light leading-[0.95] tracking-tight text-stone-950 dark:text-stone-100">
-              Real stories from
-              <em className="font-semibold not-italic text-orange"> Kigali homes</em>
+              {t("home.testimonials.titleStart")}
+              <em className="font-semibold not-italic text-orange"> {t("home.testimonials.titleEm")}</em>
             </h2>
           </div>
 
           <div className="flex items-center gap-3 self-start rounded-full border border-stone-300 bg-stone-50 px-5 py-2 dark:border-stone-700 dark:bg-stone-900">
             <Stars count={5} />
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-700 dark:text-stone-300">4.9 / 5 average</span>
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-700 dark:text-stone-300">{t("home.testimonials.average")}</span>
           </div>
         </motion.div>
 
         <div className="rounded-3xl border border-stone-300 bg-stone-50 p-6 dark:border-stone-700 dark:bg-stone-900 sm:p-8">
           <AnimatePresence custom={direction} mode="wait">
             <motion.article
-              key={activeReview.name}
+              key={activeReview.nameKey}
               custom={direction}
               variants={slideVariants}
               initial="enter"
@@ -106,13 +108,13 @@ export function ReviewsSection() {
                 <Quote className="mb-4 h-8 w-8 text-orange/60" />
                 <Stars count={activeReview.rating} />
                 <p className="mt-5 max-w-2xl font-serif text-xl leading-relaxed text-stone-900 dark:text-stone-100 sm:text-2xl">
-                  {activeReview.text}
+                  {t(activeReview.textKey)}
                 </p>
               </div>
 
               <div className="md:text-right">
-                <p className="font-semibold uppercase tracking-[0.15em] text-stone-900 dark:text-stone-100">{activeReview.name}</p>
-                <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{activeReview.location}</p>
+                <p className="font-semibold uppercase tracking-[0.15em] text-stone-900 dark:text-stone-100">{t(activeReview.nameKey)}</p>
+                <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{t(activeReview.locationKey)}</p>
               </div>
             </motion.article>
           </AnimatePresence>
@@ -121,10 +123,10 @@ export function ReviewsSection() {
             <div className="flex items-center gap-2">
               {REVIEWS.map((review, reviewIndex) => (
                 <button
-                  key={review.name}
+                  key={review.nameKey}
                   onClick={() => goTo(reviewIndex)}
                   className={`h-2.5 rounded-full transition-all ${reviewIndex === index ? "w-8 bg-orange" : "w-2.5 bg-stone-300 dark:bg-stone-600"}`}
-                  aria-label={`Go to review ${reviewIndex + 1}`}
+                  aria-label={`${t("home.testimonials.goTo")} ${reviewIndex + 1}`}
                 />
               ))}
             </div>
@@ -133,7 +135,7 @@ export function ReviewsSection() {
               <button
                 onClick={() => goTo(index - 1)}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 text-stone-600 transition-colors hover:border-orange/40 hover:text-orange dark:border-stone-600 dark:text-stone-300"
-                aria-label="Previous review"
+                aria-label={t("home.testimonials.prev")}
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
@@ -141,7 +143,7 @@ export function ReviewsSection() {
               <button
                 onClick={() => goTo(index + 1)}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-300 text-stone-600 transition-colors hover:border-orange/40 hover:text-orange dark:border-stone-600 dark:text-stone-300"
-                aria-label="Next review"
+                aria-label={t("home.testimonials.next")}
               >
                 <ChevronRight className="h-4 w-4" />
               </button>

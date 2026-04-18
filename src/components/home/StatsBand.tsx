@@ -2,31 +2,34 @@
 
 import { motion } from "framer-motion";
 import { Clock3, ShieldCheck, Star, Truck } from "lucide-react";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 const PROMISES = [
   {
-    title: "Fast Kigali Delivery",
-    description: "Track every order and get same-day delivery on most baskets.",
+    titleKey: "home.promise.fastTitle",
+    descriptionKey: "home.promise.fastDesc",
     icon: Truck,
   },
   {
-    title: "Trusted Product Quality",
-    description: "We stock only verified products sourced from trusted distributors.",
+    titleKey: "home.promise.qualityTitle",
+    descriptionKey: "home.promise.qualityDesc",
     icon: ShieldCheck,
   },
   {
-    title: "Top-Rated Experience",
-    description: "Families across Kigali consistently rate Simba for reliability and speed.",
+    titleKey: "home.promise.ratedTitle",
+    descriptionKey: "home.promise.ratedDesc",
     icon: Star,
   },
   {
-    title: "Always On Time",
-    description: "Reliable fulfillment windows so your household plans stay smooth.",
+    titleKey: "home.promise.timeTitle",
+    descriptionKey: "home.promise.timeDesc",
     icon: Clock3,
   },
 ];
 
 export function StatsBand() {
+  const { t } = useLanguage();
+
   return (
     <section className="bg-stone-100 py-18 dark:bg-stone-900 sm:py-22">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -40,16 +43,16 @@ export function StatsBand() {
           >
             <div className="mb-3 flex items-center gap-2.5 text-orange">
               <span className="h-px w-8 bg-orange/60" />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.22em]">Our Promise</span>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.22em]">{t("home.promise.eyebrow")}</span>
             </div>
 
             <h2 className="font-serif text-[clamp(1.8rem,4.2vw,3rem)] font-light leading-[0.95] tracking-tight text-stone-950 dark:text-stone-100">
-              Why families trust
-              <em className="font-semibold not-italic text-orange"> Simba</em>
+              {t("home.promise.titleStart")}
+              <em className="font-semibold not-italic text-orange"> {t("home.promise.titleEm")}</em>
             </h2>
 
             <p className="mt-5 max-w-md text-sm leading-relaxed text-stone-700 dark:text-stone-300 sm:text-base">
-              We designed Simba to feel as dependable as your neighborhood store, then made it faster, clearer, and easier for mobile-first shoppers.
+              {t("home.promise.desc")}
             </p>
           </motion.div>
 
@@ -58,7 +61,7 @@ export function StatsBand() {
               const Icon = item.icon;
               return (
                 <motion.article
-                  key={item.title}
+                  key={item.titleKey}
                   initial={{ opacity: 0, y: 22 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -69,8 +72,8 @@ export function StatsBand() {
                     <Icon className="h-5 w-5" />
                   </span>
 
-                  <h3 className="font-serif text-xl text-stone-900 dark:text-stone-100">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-stone-700 dark:text-stone-300">{item.description}</p>
+                  <h3 className="font-serif text-xl text-stone-900 dark:text-stone-100">{t(item.titleKey)}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-stone-700 dark:text-stone-300">{t(item.descriptionKey)}</p>
                 </motion.article>
               );
             })}

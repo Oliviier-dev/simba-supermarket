@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useCartStore } from "@/store/cart";
 import { formatPrice } from "@/lib/products";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 function generateOrderId(): string {
   return "SMB-" + Math.random().toString(36).slice(2, 8).toUpperCase();
@@ -24,6 +25,7 @@ interface OrderData {
 function PaymentContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { t } = useLanguage();
   const clearCart = useCartStore((s) => s.clearCart);
   const method = searchParams.get("method") as "momo" | "cod" | null;
 
@@ -63,7 +65,7 @@ function PaymentContent() {
   const handleMomoPhone = () => {
     const clean = momoPhone.replace(/\D/g, "");
     if (!/^\d{10}$/.test(clean)) {
-      setPhoneError("MoMo number must be exactly 10 digits (e.g. 0791787414)");
+      setPhoneError(t("payment.error.phoneDigits"));
       return;
     }
     setPhoneError("");
@@ -121,9 +123,9 @@ function PaymentContent() {
               </div>
             </div>
             <div className="text-center">
-              <h1 className="font-serif text-3xl font-bold text-[var(--fg)]">Order Placed!</h1>
+              <h1 className="font-serif text-3xl font-bold text-[var(--fg)]">{t("payment.success.title")}</h1>
               <p className="text-[var(--muted)] mt-1">
-                {method === "momo" ? "Payment confirmed via MoMo." : "We'll collect payment on delivery."}
+                {method === "momo" ? t("payment.success.momo") : t("payment.success.cod")}
               </p>
             </div>
           </div>
@@ -131,7 +133,7 @@ function PaymentContent() {
           {/* Order card */}
           <div className="bg-[var(--surface)] rounded-3xl border border-[var(--border)] p-6 space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-xs font-semibold text-[var(--muted)] uppercase tracking-wider">Order ID</span>
+              <span className="text-xs font-semibold text-[var(--muted)] uppercase tracking-wider">{t("payment.orderId")}</span>
               <span className="font-mono font-bold text-orange text-sm">{orderId}</span>
             </div>
 
@@ -146,27 +148,27 @@ function PaymentContent() {
                     </div>
                   ))}
                   {orderData.items.length > 3 && (
-                    <p className="text-xs text-[var(--muted)]">+{orderData.items.length - 3} more items</p>
+                    <p className="text-xs text-[var(--muted)]">+{orderData.items.length - 3} {t("payment.moreItems")}</p>
                   )}
                 </div>
                 <div className="h-px bg-[var(--border)]" />
                 <div className="flex justify-between">
-                  <span className="font-bold text-[var(--fg)]">Total Paid</span>
+                  <span className="font-bold text-[var(--fg)]">{t("payment.totalPaid")}</span>
                   <span className="font-bold text-orange">{formatPrice(orderData.total)}</span>
                 </div>
                 <div className="h-px bg-[var(--border)]" />
                 <div className="space-y-1 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-[var(--muted)]">Delivering to</span>
+                    <span className="text-[var(--muted)]">{t("payment.deliveringTo")}</span>
                     <span className="font-medium text-[var(--fg)]">{orderData.delivery.fullName}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[var(--muted)]">District</span>
+                    <span className="text-[var(--muted)]">{t("checkout.district")}</span>
                     <span className="font-medium text-[var(--fg)]">{orderData.delivery.district}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[var(--muted)]">Est. delivery</span>
-                    <span className="font-medium text-green-600 dark:text-green-400">{estimatedDelivery()} today</span>
+                    <span className="text-[var(--muted)]">{t("payment.estDelivery")}</span>
+                    <span className="font-medium text-green-600 dark:text-green-400">{estimatedDelivery()} {t("payment.today")}</span>
                   </div>
                 </div>
               </>
@@ -177,7 +179,7 @@ function PaymentContent() {
             href="/"
             className="block w-full h-12 bg-orange text-white rounded-xl font-semibold flex items-center justify-center hover:bg-orange-hover transition-colors"
           >
-            Continue Shopping
+            {t("payment.continueShopping")}
           </Link>
         </div>
       </div>
@@ -189,8 +191,8 @@ function PaymentContent() {
     return (
       <div className="min-h-screen bg-[var(--bg)] flex flex-col items-center justify-center px-4 gap-6">
         <div className="w-16 h-16 rounded-full border-4 border-orange border-t-transparent animate-spin" />
-        <p className="font-serif text-2xl font-bold text-[var(--fg)]">Confirming your order...</p>
-        <p className="text-[var(--muted)] text-sm">Just a moment</p>
+        <p className="font-serif text-2xl font-bold text-[var(--fg)]">{t("payment.confirming")}</p>
+        <p className="text-[var(--muted)] text-sm">{t("payment.justMoment")}</p>
       </div>
     );
   }
@@ -208,25 +210,25 @@ function PaymentContent() {
               </div>
               <div>
                 <p className="font-bold text-[var(--fg)]">MTN Mobile Money</p>
-                <p className="text-xs text-[var(--muted)]">Enter your MoMo number</p>
+                <p className="text-xs text-[var(--muted)]">{t("payment.enterMomo")}</p>
               </div>
             </div>
 
             {orderData && (
               <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-2xl p-4">
-                <p className="text-xs text-yellow-700 dark:text-yellow-300 font-medium">Amount to pay</p>
+                <p className="text-xs text-yellow-700 dark:text-yellow-300 font-medium">{t("payment.amountToPay")}</p>
                 <p className="text-2xl font-bold text-yellow-800 dark:text-yellow-200 mt-1">{formatPrice(orderData.total)}</p>
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-[var(--fg)] mb-1.5">MoMo Phone Number</label>
+              <label className="block text-sm font-medium text-[var(--fg)] mb-1.5">{t("payment.momoPhone")}</label>
               <input
                 type="tel"
                 value={momoPhone}
                 onChange={(e) => { setMomoPhone(e.target.value); setPhoneError(""); }}
                 onKeyDown={(e) => e.key === "Enter" && handleMomoPhone()}
-                placeholder="0791787414"
+                placeholder={t("checkout.phonePlaceholder")}
                 className={`w-full h-12 px-4 rounded-xl border bg-[var(--bg)] text-[var(--fg)] text-base placeholder:text-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-orange/40 transition-all ${
                   phoneError ? "border-red-500" : "border-[var(--border)]"
                 }`}
@@ -239,7 +241,7 @@ function PaymentContent() {
               onClick={handleMomoPhone}
               className="w-full h-12 bg-yellow-400 text-yellow-900 rounded-xl font-bold hover:bg-yellow-300 active:scale-[0.99] transition-all"
             >
-              Send Payment Request
+              {t("payment.sendRequest")}
             </button>
           </div>
         )}
@@ -251,14 +253,14 @@ function PaymentContent() {
               <div className="w-16 h-16 rounded-full border-4 border-yellow-400 border-t-transparent animate-spin" />
             </div>
             <div>
-              <p className="font-bold text-[var(--fg)] text-lg">Push notification sent!</p>
+              <p className="font-bold text-[var(--fg)] text-lg">{t("payment.pushSent")}</p>
               <p className="text-sm text-[var(--muted)] mt-2">
-                Check your phone <span className="font-medium text-[var(--fg)]">{momoPhone}</span> and approve the MoMo request.
+                {t("payment.checkPhone")} <span className="font-medium text-[var(--fg)]">{momoPhone}</span> {t("payment.approveRequest")}
               </p>
             </div>
             <div className="flex items-center gap-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-2xl p-4">
               <div className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" />
-              <p className="text-xs text-yellow-700 dark:text-yellow-300">Waiting for approval...</p>
+              <p className="text-xs text-yellow-700 dark:text-yellow-300">{t("payment.waitingApproval")}</p>
             </div>
           </div>
         )}
@@ -272,8 +274,8 @@ function PaymentContent() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                 </svg>
               </div>
-              <p className="font-bold text-[var(--fg)] text-lg">Enter MoMo PIN</p>
-              <p className="text-xs text-[var(--muted)] mt-1">Enter your 4-digit MoMo PIN to authorize</p>
+              <p className="font-bold text-[var(--fg)] text-lg">{t("payment.enterPin")}</p>
+              <p className="text-xs text-[var(--muted)] mt-1">{t("payment.enterPinDesc")}</p>
             </div>
 
             <div className="flex justify-center gap-3">
@@ -294,7 +296,7 @@ function PaymentContent() {
             </div>
 
             <p className="text-center text-xs text-[var(--muted)]">
-              Auto-submits when all 4 digits entered
+              {t("payment.autoSubmit")}
             </p>
           </div>
         )}
@@ -306,14 +308,14 @@ function PaymentContent() {
               <div className="w-16 h-16 rounded-full border-4 border-yellow-400 border-t-transparent animate-spin" />
             </div>
             <div>
-              <p className="font-bold text-[var(--fg)] text-lg">Processing payment...</p>
-              <p className="text-sm text-[var(--muted)] mt-1">Do not close this window</p>
+              <p className="font-bold text-[var(--fg)] text-lg">{t("payment.processing")}</p>
+              <p className="text-sm text-[var(--muted)] mt-1">{t("payment.doNotClose")}</p>
             </div>
           </div>
         )}
 
         <p className="text-center text-xs text-[var(--muted)] mt-6">
-          Secured by MTN Rwanda &middot; Simba Supermarket
+          {t("payment.securedBy")}
         </p>
       </div>
     </div>

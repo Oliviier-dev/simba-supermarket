@@ -6,8 +6,11 @@ import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { CATEGORY_IMAGES, formatPrice } from "@/lib/products";
 import type { Product } from "@/types";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 export function FeaturedProducts({ products }: { products: Product[] }) {
+  const { t } = useLanguage();
+
   return (
     <section className="bg-stone-100 py-18 dark:bg-stone-900 sm:py-22">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -15,11 +18,11 @@ export function FeaturedProducts({ products }: { products: Product[] }) {
           <div>
             <div className="mb-3 flex items-center gap-2.5 text-orange">
               <span className="h-px w-8 bg-orange/60" />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.22em]">Featured Collection</span>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.22em]">{t("home.featured.eyebrow")}</span>
             </div>
             <h2 className="font-serif text-[clamp(1.8rem,4.5vw,3.45rem)] font-light leading-[0.95] tracking-tight text-stone-950 dark:text-stone-100">
-              Curated picks for every
-              <em className="font-semibold not-italic text-orange"> family basket</em>
+              {t("home.featured.titleStart")}
+              <em className="font-semibold not-italic text-orange"> {t("home.featured.titleEm")}</em>
             </h2>
           </div>
 
@@ -27,7 +30,7 @@ export function FeaturedProducts({ products }: { products: Product[] }) {
             href="/products"
             className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-stone-700 transition-colors hover:text-orange dark:text-stone-400"
           >
-            View All
+            {t("home.featured.viewAll")}
             <ChevronRight className="h-4 w-4" />
           </Link>
         </motion.div>
@@ -51,6 +54,7 @@ export function FeaturedProducts({ products }: { products: Product[] }) {
 }
 
 function ProductCard({ product }: { product: Product }) {
+  const { t } = useLanguage();
   const categoryImage = CATEGORY_IMAGES[product.category] ?? "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800";
 
   return (
@@ -78,7 +82,7 @@ function ProductCard({ product }: { product: Product }) {
         </div>
 
         <Link href={`/products/${product.id}`} className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-[0.18em] text-stone-700 transition-colors group-hover:text-orange dark:text-stone-300">
-          View Details
+          {t("home.featured.viewDetails")}
           <ChevronRight className="h-3.5 w-3.5" />
         </Link>
       </div>

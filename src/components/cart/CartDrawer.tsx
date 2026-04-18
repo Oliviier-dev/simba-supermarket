@@ -5,10 +5,12 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useCartStore } from "@/store/cart";
 import { formatPrice } from "@/lib/products";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 export function CartDrawer() {
   const { items, isOpen, closeCart, removeItem, updateQuantity, totalPrice } =
     useCartStore();
+  const { t } = useLanguage();
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
@@ -39,9 +41,9 @@ export function CartDrawer() {
         {/* Header */}
         <div className={`flex items-center justify-between border-b px-5 py-4 ${isDark ? "border-stone-800" : "border-stone-200"}`}>
           <div>
-            <h2 className={`font-serif text-lg font-bold ${isDark ? "text-stone-100" : "text-stone-900"}`}>Your Cart</h2>
+            <h2 className={`font-serif text-lg font-bold ${isDark ? "text-stone-100" : "text-stone-900"}`}>{t("cart.title")}</h2>
             <p className={`mt-0.5 text-xs ${isDark ? "text-stone-400" : "text-stone-500"}`}>
-              {items.length === 0 ? "Empty" : `${items.reduce((s, i) => s + i.quantity, 0)} items`}
+              {items.length === 0 ? t("cart.empty") : `${items.reduce((s, i) => s + i.quantity, 0)} ${t("cart.items")}`}
             </p>
           </div>
           <button
@@ -69,14 +71,14 @@ export function CartDrawer() {
                 </svg>
               </div>
               <div>
-                <p className={`text-sm font-medium ${isDark ? "text-stone-100" : "text-stone-900"}`}>Your cart is empty</p>
-                <p className={`mt-1 text-xs ${isDark ? "text-stone-500" : "text-stone-500"}`}>Add products to get started</p>
+                <p className={`text-sm font-medium ${isDark ? "text-stone-100" : "text-stone-900"}`}>{t("cart.emptyTitle")}</p>
+                <p className={`mt-1 text-xs ${isDark ? "text-stone-500" : "text-stone-500"}`}>{t("cart.emptyDesc")}</p>
               </div>
               <button
                 onClick={closeCart}
                 className="mt-2 px-5 py-2 bg-orange text-white text-sm font-medium rounded-xl hover:bg-orange-hover transition-colors"
               >
-                Browse Products
+                {t("cart.browse")}
               </button>
             </div>
           ) : (
@@ -120,7 +122,7 @@ export function CartDrawer() {
                       >+</button>
                     </div>
 
-                    <button onClick={() => removeItem(item.id)} className="text-stone-500 transition-colors hover:text-red-500" aria-label="Remove">
+                    <button onClick={() => removeItem(item.id)} className="text-stone-500 transition-colors hover:text-red-500" aria-label={t("cart.remove")}>
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round"
                           d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
@@ -141,21 +143,21 @@ export function CartDrawer() {
         {items.length > 0 && (
           <div className={`space-y-4 border-t px-5 py-5 ${isDark ? "border-stone-800" : "border-stone-200"}`}>
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDark ? "text-stone-400" : "text-stone-500"}`}>Subtotal</span>
+              <span className={`text-sm ${isDark ? "text-stone-400" : "text-stone-500"}`}>{t("cart.subtotal")}</span>
               <span className={`text-base font-bold ${isDark ? "text-stone-100" : "text-stone-900"}`}>
                 {formatPrice(totalPrice())}
               </span>
             </div>
             <div className={`flex items-center justify-between text-xs ${isDark ? "text-stone-500" : "text-stone-500"}`}>
-              <span>Delivery</span>
-              <span>Calculated at checkout</span>
+              <span>{t("cart.delivery")}</span>
+              <span>{t("cart.deliveryCalc")}</span>
             </div>
             <Link
               href="/checkout"
               onClick={closeCart}
               className="flex items-center justify-center w-full h-12 bg-orange hover:bg-orange-hover text-white font-semibold rounded-xl transition-colors text-sm"
             >
-              Proceed to Checkout →
+              {t("cart.proceed")} →
             </Link>
           </div>
         )}

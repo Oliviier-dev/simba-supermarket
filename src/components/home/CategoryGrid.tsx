@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { Category } from "@/types";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 const CATEGORY_GROUPS = [
   {
@@ -42,6 +43,7 @@ const CATEGORY_GROUPS = [
 ] as const;
 
 export function CategoryGrid({ categories }: { categories: Category[] }) {
+  const { t } = useLanguage();
   const [activeGroup, setActiveGroup] = useState<(typeof CATEGORY_GROUPS)[number]["key"]>("all");
 
   const visible = useMemo(() => {
@@ -68,12 +70,12 @@ export function CategoryGrid({ categories }: { categories: Category[] }) {
           <div>
             <div className="mb-3 flex items-center gap-2.5 text-orange">
               <span className="h-px w-8 bg-orange/60" />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.22em]">Shop By Category</span>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.22em]">{t("home.categories.eyebrow")}</span>
             </div>
 
             <h2 className="font-serif text-[clamp(1.8rem,4.3vw,3.2rem)] font-light leading-[0.95] tracking-tight text-stone-950 dark:text-stone-100">
-              Find your essentials by
-              <em className="font-semibold not-italic text-orange"> lifestyle</em>
+              {t("home.categories.titleStart")}
+              <em className="font-semibold not-italic text-orange"> {t("home.categories.titleEm")}</em>
             </h2>
           </div>
 
@@ -90,7 +92,13 @@ export function CategoryGrid({ categories }: { categories: Category[] }) {
                       : "border-stone-300 bg-stone-50 text-stone-700 hover:border-stone-400 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
                   }`}
                 >
-                  {group.label}
+                  {group.key === "all"
+                    ? t("filter.all")
+                    : group.key === "essentials"
+                    ? t("home.categories.groupEssentials")
+                    : group.key === "lifestyle"
+                    ? t("home.categories.groupLifestyle")
+                    : t("home.categories.groupHome")}
                 </button>
               );
             })}
@@ -130,6 +138,8 @@ function Tile({
   height: string;
   index: number;
 }) {
+  const { t } = useLanguage();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -154,10 +164,10 @@ function Tile({
 
         <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
           <h3 className="font-serif text-2xl font-medium text-white">{category.name}</h3>
-          <p className="mt-1 text-sm text-white/70">{category.count} products</p>
+          <p className="mt-1 text-sm text-white/70">{category.count} {t("sort.products")}</p>
 
           <p className="mt-5 inline-flex translate-y-2 items-center gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-orange opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-            Shop
+            {t("nav.shop")}
             <ArrowRight className="h-4 w-4" />
           </p>
         </div>

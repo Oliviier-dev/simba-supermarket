@@ -1,6 +1,7 @@
 "use client";
 
 import { getAllCategories } from "@/lib/products";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 interface CategoryFilterProps {
   selected: string;
@@ -8,12 +9,13 @@ interface CategoryFilterProps {
 }
 
 export function CategoryFilter({ selected, onChange }: CategoryFilterProps) {
+  const { t } = useLanguage();
   const categories = getAllCategories();
 
   return (
     <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
       <Pill
-        label="All"
+        label={t("filter.all")}
         count={categories.reduce((s, c) => s + c.count, 0)}
         active={selected === ""}
         onClick={() => onChange("")}

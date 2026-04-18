@@ -1,5 +1,7 @@
 "use client";
 
+import { useLanguage } from "@/components/providers/LanguageProvider";
+
 export type SortOption = "default" | "price-asc" | "price-desc";
 
 interface SortControlsProps {
@@ -9,20 +11,22 @@ interface SortControlsProps {
 }
 
 export function SortControls({ value, onChange, count }: SortControlsProps) {
+  const { t } = useLanguage();
+
   return (
     <div className="flex items-center justify-between gap-4">
       <p className="text-sm text-[var(--muted)]">
-        <span className="font-semibold text-[var(--fg)]">{count}</span> products
+        <span className="font-semibold text-[var(--fg)]">{count}</span> {t("sort.products")}
       </p>
 
       <div className="flex items-center gap-2">
-        <span className="text-xs text-[var(--muted)] hidden sm:block">Sort:</span>
+        <span className="text-xs text-[var(--muted)] hidden sm:block">{t("sort.sort")}</span>
         <div className="flex gap-1.5">
           {(
             [
-              { value: "default", label: "Default" },
-              { value: "price-asc", label: "Price ↑" },
-              { value: "price-desc", label: "Price ↓" },
+              { value: "default", label: t("sort.default") },
+              { value: "price-asc", label: t("sort.priceAsc") },
+              { value: "price-desc", label: t("sort.priceDesc") },
             ] as { value: SortOption; label: string }[]
           ).map((opt) => (
             <button
