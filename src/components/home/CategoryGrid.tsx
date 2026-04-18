@@ -21,12 +21,23 @@ const CATEGORY_GROUPS = [
   {
     key: "lifestyle",
     label: "Lifestyle",
-    names: ["Cosmetics & Personal Care", "Sports & Fitness", "Stationery"],
+    names: [
+      "Cosmetics & Personal Care",
+      "Sports & Fitness",
+      "Sports & Wellness",
+      "Stationery",
+      "Pet Care",
+    ],
   },
   {
     key: "home",
     label: "Home",
-    names: ["Kitchenware & Electronics", "Baby Products", "Alcoholic Drinks"],
+    names: [
+      "Kitchenware & Electronics",
+      "Kitchen Storage",
+      "Baby Products",
+      "Alcoholic Drinks",
+    ],
   },
 ] as const;
 

@@ -18,8 +18,14 @@ export const CATEGORY_IMAGES: Record<string, string> = {
     "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800",
   "Sports & Fitness":
     "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800",
+  "Sports & Wellness":
+    "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800",
   Stationery:
     "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800",
+  "Kitchen Storage":
+    "https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=800",
+  "Pet Care":
+    "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800",
   "Baby Products":
     "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800",
 };
