@@ -23,8 +23,9 @@ export function Hero() {
           </div>
 
           <h1 className="font-serif text-[clamp(2.25rem,6.4vw,5.9rem)] font-light leading-[0.95] tracking-tight text-white">
-            Shop Rwanda's everyday essentials with
-            <em className="font-semibold not-italic text-orange"> style and speed</em>
+            Shop essentials,
+            <br />
+            <em className="font-semibold not-italic text-orange">fast delivery.</em>
           </h1>
 
           <p className="mt-6 max-w-xl text-base leading-relaxed text-stone-200 sm:text-lg">

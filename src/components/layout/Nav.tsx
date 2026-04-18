@@ -84,7 +84,17 @@ export function Nav() {
                       transition={{ type: "spring", stiffness: 420, damping: 36 }}
                     />
                   )}
-                  <span className={active ? "text-[var(--fg)] dark:text-stone-100" : ""}>{link.label}</span>
+                  <span
+                    className={
+                      active
+                        ? isSolid
+                          ? "text-[var(--fg)] dark:text-stone-100"
+                          : "text-white"
+                        : ""
+                    }
+                  >
+                    {link.label}
+                  </span>
                 </Link>
               );
             })}

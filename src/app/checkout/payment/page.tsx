@@ -61,9 +61,9 @@ function PaymentContent() {
   }, [method, codStep, clearCart]);
 
   const handleMomoPhone = () => {
-    const clean = momoPhone.replace(/\s/g, "");
-    if (!/^(\+?250)?[0-9]{9}$/.test(clean)) {
-      setPhoneError("Enter a valid MoMo number (e.g. 0788 123 456)");
+    const clean = momoPhone.replace(/\D/g, "");
+    if (!/^\d{10}$/.test(clean)) {
+      setPhoneError("MoMo number must be exactly 10 digits (e.g. 0791787414)");
       return;
     }
     setPhoneError("");
@@ -226,7 +226,7 @@ function PaymentContent() {
                 value={momoPhone}
                 onChange={(e) => { setMomoPhone(e.target.value); setPhoneError(""); }}
                 onKeyDown={(e) => e.key === "Enter" && handleMomoPhone()}
-                placeholder="0788 123 456"
+                placeholder="0791787414"
                 className={`w-full h-12 px-4 rounded-xl border bg-[var(--bg)] text-[var(--fg)] text-base placeholder:text-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-orange/40 transition-all ${
                   phoneError ? "border-red-500" : "border-[var(--border)]"
                 }`}

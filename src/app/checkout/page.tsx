@@ -89,8 +89,8 @@ export default function CheckoutPage() {
     const e: FormErrors = {};
     if (!delivery.fullName.trim()) e.fullName = "Full name is required";
     if (!delivery.phone.trim()) e.phone = "Phone number is required";
-    else if (!/^(\+?250)?[0-9]{9}$/.test(delivery.phone.replace(/\s/g, "")))
-      e.phone = "Enter a valid Rwanda phone number";
+    else if (!/^\d{10}$/.test(delivery.phone.replace(/\D/g, "")))
+      e.phone = "Phone number must be exactly 10 digits";
     if (!delivery.address.trim()) e.address = "Delivery address is required";
     if (!delivery.district) e.district = "Please select a district";
     setErrors(e);
@@ -266,7 +266,7 @@ export default function CheckoutPage() {
                     setDelivery((d) => ({ ...d, phone: e.target.value }));
                     if (errors.phone) setErrors((e) => ({ ...e, phone: undefined }));
                   }}
-                  placeholder="e.g. 0788 123 456"
+                  placeholder="e.g. 0791787414"
                   className={`w-full h-11 px-4 rounded-xl border bg-[var(--bg)] text-[var(--fg)] text-sm placeholder:text-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-orange/40 transition-all ${
                     errors.phone ? "border-red-500" : "border-[var(--border)]"
                   }`}
