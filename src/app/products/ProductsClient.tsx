@@ -8,6 +8,8 @@ import { CategoryFilter } from "@/components/products/CategoryFilter";
 import { SortControls, type SortOption } from "@/components/products/SortControls";
 import type { Product } from "@/types";
 
+const PAGE_SIZE = 20;
+
 export default function ProductsClient() {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") ?? "";
@@ -16,6 +18,7 @@ export default function ProductsClient() {
   const [query, setQuery] = useState(initialQuery);
   const [category, setCategory] = useState(initialCategory);
   const [sort, setSort] = useState<SortOption>("default");
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     setQuery(searchParams.get("q") ?? "");
@@ -39,6 +42,24 @@ export default function ProductsClient() {
 
     return result;
   }, [all, query, category, sort]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [query, category, sort]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const endIndex = Math.min(startIndex + PAGE_SIZE, filtered.length);
+  const paginated = filtered.slice(startIndex, endIndex);
+
+  const pageNumbers = useMemo(() => {
+    const pages: number[] = [];
+    const start = Math.max(1, currentPage - 2);
+    const end = Math.min(totalPages, currentPage + 2);
+    for (let i = start; i <= end; i++) pages.push(i);
+    return pages;
+  }, [currentPage, totalPages]);
 
   return (
     <div className="min-h-screen">
@@ -124,11 +145,79 @@ export default function ProductsClient() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
-            {filtered.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+              {paginated.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+
+            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
+              <p className="text-xs text-[var(--muted)] sm:text-sm">
+                Showing <span className="font-semibold text-[var(--fg)]">{startIndex + 1}</span>
+                {" "}to <span className="font-semibold text-[var(--fg)]">{endIndex}</span>
+                {" "}of <span className="font-semibold text-[var(--fg)]">{filtered.length}</span>
+              </p>
+
+              {totalPages > 1 && (
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="h-9 rounded-lg border border-[var(--border)] px-3 text-xs font-medium text-[var(--fg)] transition-colors hover:border-orange hover:text-orange disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    Prev
+                  </button>
+
+                  {pageNumbers[0] > 1 && (
+                    <>
+                      <button
+                        onClick={() => setPage(1)}
+                        className="h-9 min-w-9 rounded-lg border border-[var(--border)] px-2 text-xs font-medium text-[var(--fg)] transition-colors hover:border-orange hover:text-orange"
+                      >
+                        1
+                      </button>
+                      {pageNumbers[0] > 2 && <span className="px-1 text-[var(--muted)]">...</span>}
+                    </>
+                  )}
+
+                  {pageNumbers.map((p) => (
+                    <button
+                      key={p}
+                      onClick={() => setPage(p)}
+                      className={`h-9 min-w-9 rounded-lg px-2 text-xs font-semibold transition-colors ${
+                        p === currentPage
+                          ? "bg-orange text-white"
+                          : "border border-[var(--border)] text-[var(--fg)] hover:border-orange hover:text-orange"
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ))}
+
+                  {pageNumbers[pageNumbers.length - 1] < totalPages && (
+                    <>
+                      {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && <span className="px-1 text-[var(--muted)]">...</span>}
+                      <button
+                        onClick={() => setPage(totalPages)}
+                        className="h-9 min-w-9 rounded-lg border border-[var(--border)] px-2 text-xs font-medium text-[var(--fg)] transition-colors hover:border-orange hover:text-orange"
+                      >
+                        {totalPages}
+                      </button>
+                    </>
+                  )}
+
+                  <button
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="h-9 rounded-lg border border-[var(--border)] px-3 text-xs font-medium text-[var(--fg)] transition-colors hover:border-orange hover:text-orange disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
         )}
       </div>
     </div>
