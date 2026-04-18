@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Moon, Sun, ShoppingCart, Menu, X } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import { useCartStore } from "@/store/cart";
 import { LANG_LABELS, type AppLanguage } from "@/lib/i18n";
 import { useLanguage } from "@/components/providers/LanguageProvider";

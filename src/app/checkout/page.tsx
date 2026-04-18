@@ -151,7 +151,7 @@ export default function CheckoutPage() {
                   <li key={item.id} className="flex items-center gap-4 px-6 py-4">
                     <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 flex-shrink-0">
                       <Image
-                        src={CATEGORY_IMAGES[item.category] ?? ""}
+                        src={item.image || CATEGORY_IMAGES[item.category] || ""}
                         alt={item.name}
                         fill
                         sizes="64px"

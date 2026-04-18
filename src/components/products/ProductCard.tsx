@@ -18,14 +18,14 @@ export function ProductCard({ product }: { product: Product }) {
     setTimeout(() => setAdded(false), 1200);
   };
 
-  const categoryImage = CATEGORY_IMAGES[product.category] ?? "";
+  const imageSrc = product.image || CATEGORY_IMAGES[product.category] || "";
 
   return (
     <div className="group bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden flex flex-col hover:shadow-lg hover:shadow-stone-200/60 dark:hover:shadow-stone-900/60 hover:border-orange/30 transition-all duration-300">
       {/* Image */}
       <Link href={`/products/${product.id}`} className="relative block aspect-square overflow-hidden bg-stone-100 dark:bg-stone-800">
         <Image
-          src={categoryImage}
+          src={imageSrc}
           alt={product.name}
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"

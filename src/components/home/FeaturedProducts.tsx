@@ -55,13 +55,13 @@ export function FeaturedProducts({ products }: { products: Product[] }) {
 
 function ProductCard({ product }: { product: Product }) {
   const { t } = useLanguage();
-  const categoryImage = CATEGORY_IMAGES[product.category] ?? "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800";
+  const imageSrc = product.image || CATEGORY_IMAGES[product.category] || "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800";
 
   return (
     <article className="group overflow-hidden rounded-md border border-stone-300 bg-stone-50 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-stone-700 dark:bg-stone-800/90 dark:shadow-none">
       <Link href={`/products/${product.id}`} className="relative block aspect-[4/3] overflow-hidden">
         <Image
-          src={categoryImage}
+          src={imageSrc}
           alt={product.name}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

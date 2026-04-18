@@ -28,7 +28,7 @@ export default async function ProductDetailPage({
     .filter((p) => p.id !== product.id)
     .slice(0, 4);
 
-  const categoryImage = CATEGORY_IMAGES[product.category] ?? "";
+  const imageSrc = product.image || CATEGORY_IMAGES[product.category] || "";
 
   return (
     <div className="min-h-screen bg-[var(--bg)]">
@@ -58,7 +58,7 @@ export default async function ProductDetailPage({
           {/* Image */}
           <div className="relative aspect-square rounded-3xl overflow-hidden bg-stone-100 dark:bg-stone-800">
             <Image
-              src={categoryImage}
+              src={imageSrc}
               alt={product.name}
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
