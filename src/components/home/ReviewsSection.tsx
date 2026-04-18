@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
@@ -11,18 +12,21 @@ const REVIEWS = [
     locationKey: "home.testimonials.r1Location",
     rating: 5,
     textKey: "home.testimonials.r1Text",
+    avatar: "/avatar-claire.png",
   },
   {
     nameKey: "home.testimonials.r2Name",
     locationKey: "home.testimonials.r2Location",
     rating: 5,
     textKey: "home.testimonials.r2Text",
+    avatar: "/avatar-amina.png",
   },
   {
     nameKey: "home.testimonials.r3Name",
     locationKey: "home.testimonials.r3Location",
     rating: 5,
     textKey: "home.testimonials.r3Text",
+    avatar: "/avatar-thierry.png",
   },
 ];
 
@@ -113,6 +117,17 @@ export function ReviewsSection() {
               </div>
 
               <div className="md:text-right">
+                <div className="mb-3 flex items-center gap-3 md:justify-end">
+                  <div className="relative h-11 w-11 overflow-hidden rounded-full border border-stone-300 bg-stone-100 dark:border-stone-700 dark:bg-stone-800">
+                    <Image
+                      src={activeReview.avatar}
+                      alt={t(activeReview.nameKey)}
+                      fill
+                      sizes="44px"
+                      className="object-cover"
+                    />
+                  </div>
+                </div>
                 <p className="font-semibold uppercase tracking-[0.15em] text-stone-900 dark:text-stone-100">{t(activeReview.nameKey)}</p>
                 <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{t(activeReview.locationKey)}</p>
               </div>
