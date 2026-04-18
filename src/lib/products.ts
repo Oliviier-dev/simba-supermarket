@@ -51,6 +51,14 @@ export function getProductById(id: number): Product | undefined {
   return allProducts.find((p) => p.id === id);
 }
 
+export function getProductDescription(product: Product): string {
+  if (product.description && product.description.trim()) {
+    return product.description.trim();
+  }
+
+  return `${product.name} is part of our ${product.category} selection and is sold per ${product.unit.toLowerCase()}. We source trusted everyday products for reliable quality and convenient same-day delivery in Kigali.`;
+}
+
 export function getAllCategories(): Category[] {
   const counts: Record<string, number> = {};
   for (const p of allProducts) {

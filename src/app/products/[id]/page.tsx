@@ -7,6 +7,7 @@ import {
   getAllProducts,
   formatPrice,
   CATEGORY_IMAGES,
+  getProductDescription,
 } from "@/lib/products";
 import { ProductCard } from "@/components/products/ProductCard";
 import { AddToCartSection } from "./AddToCartSection";
@@ -29,6 +30,7 @@ export default async function ProductDetailPage({
     .slice(0, 4);
 
   const imageSrc = product.image || CATEGORY_IMAGES[product.category] || "";
+  const description = getProductDescription(product);
 
   return (
     <div className="min-h-screen bg-[var(--bg)]">
@@ -92,6 +94,11 @@ export default async function ProductDetailPage({
               <span className="text-4xl font-bold text-orange">
                 {formatPrice(product.price)}
               </span>
+            </div>
+
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">Description</p>
+              <p className="text-sm leading-relaxed text-[var(--fg)]">{description}</p>
             </div>
 
             <div className="h-px bg-[var(--border)]" />
